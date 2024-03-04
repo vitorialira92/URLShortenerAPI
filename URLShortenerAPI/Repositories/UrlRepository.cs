@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Net;
 using URLShortenerAPI.Data;
 using URLShortenerAPI.Model;
@@ -28,6 +29,7 @@ namespace URLShortenerAPI.Repositories
 
         public Url GetUrlByOriginal(string url)
         {
+            url = WebUtility.UrlDecode(url);
             var original = _context.Urls.FirstOrDefault(x => x.OriginalURL == url);
             return original;
         }
