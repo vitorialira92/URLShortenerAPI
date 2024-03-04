@@ -146,8 +146,31 @@ namespace URLShortenerTest
 
             ret.ShortenedURL.Should().Be(expectedShortUrl);
         }
+        [Theory]
+        [MemberData(nameof(SameUrls))]
+        public void must_not_generate_again_when_there_is_a_valid_short_url(string url, string expectedShortUrl)
+        {
+            var mockedRepository = Substitute.For<IUrlRepository>();
+            Url mustBeUrl = new Url
+            {
+                Id = 145,
+            };
+            mockedRepository.Save((Arg.Any<Url>())).Returns(mustBeUrl);
 
-        /*
+            mockedRepository.IsShortUrlAvailable((Arg.Any<string>())).Returns(true);
+
+            var sut = new UrlService(mockedRepository);
+
+            var ret = sut.ShortUrl(url);
+
+            mockedRepository.GetUrlByOriginal((Arg.Any<string>())).Returns(ret);
+
+            var secondTry = sut.ShortUrl(url);
+
+            secondTry.ShortenedURL.Should().Be(expectedShortUrl);
+        }
+
+        
         [Fact]
         public async Task must_throw_exception_when_time_is_over()
         {
@@ -174,7 +197,7 @@ namespace URLShortenerTest
             sut.Invoking(x => x.GetOriginalByShort(ret.ShortenedURL))
                    .Should().Throw<ResourceNotFoundException>();
 
-        }*/
+        }
         public static IEnumerable<object[]> UrlAndShortUrl()
         {
             return new[]
@@ -203,6 +226,14 @@ namespace URLShortenerTest
             {
                 new object []{ @"https://www.netflix.com/browse", "0010100", true},
                 new object []{ @"https://www.netflix.com/broswe", "010100A", false},
+            };
+        } 
+        
+        public static IEnumerable<object[]> SameUrls()
+        {
+            return new[]
+            {
+                new object []{ @"https://www.figma.com/community/", "0001110"},
             };
         }
     }
