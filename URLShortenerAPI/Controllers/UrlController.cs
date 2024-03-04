@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using URLShortenerAPI.DTO;
 using URLShortenerAPI.Services;
 
 namespace URLShortenerAPI.Controllers
@@ -26,7 +28,14 @@ namespace URLShortenerAPI.Controllers
         {
             var url = _service.ShortUrl(originalUrl);
 
-            return Ok(url);
+            UrlShortenResponse response = new UrlShortenResponse
+            {
+                Id = url.Id,
+                ShortenedUrl = url.ShortenedURL,
+                ValidityDurationInSeconds = 120
+            };
+
+            return Ok(response);
         }
     }
 }
