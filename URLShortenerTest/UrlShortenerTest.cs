@@ -29,6 +29,7 @@ namespace URLShortenerTest
             shortUrl.Should().BeOfType<Url>();
         }
         
+        
         [Theory]
         [MemberData(nameof(UrlsList))]
         public void short_url_must_be_7_characters_long(string url)
@@ -49,6 +50,8 @@ namespace URLShortenerTest
             shortUrl.ShortenedURL.Should().HaveLength(7);
 
         }
+        
+        
         [Theory]
         [MemberData(nameof(UrlsList))]
         public void short_url_must_have_only_binary_numbers(string url)
@@ -80,11 +83,11 @@ namespace URLShortenerTest
 
         }
         
+
         [Theory]
         [MemberData(nameof(UrlAndShortUrl))]
         public void short_url_must_be_correct(string url, string shortUrl)
         {
-
             var mockedRepository = Substitute.For<IUrlRepository>();
             var sut = new UrlService(mockedRepository);
 
@@ -100,9 +103,10 @@ namespace URLShortenerTest
             ret.ShortenedURL.Should().Be(shortUrl);
         }
 
+
         [Theory]
         [MemberData(nameof(UrlAndShortUrl))]
-        public void must_return_original_url(string originalUrl, string shortUrl)
+        public void must_return_original_url_by_short_url(string originalUrl, string shortUrl)
         {
 
             var mockedRepository = Substitute.For<IUrlRepository>();
@@ -146,6 +150,8 @@ namespace URLShortenerTest
 
             ret.ShortenedURL.Should().Be(expectedShortUrl);
         }
+        
+        
         [Theory]
         [MemberData(nameof(SameUrls))]
         public void must_not_generate_again_when_there_is_a_valid_short_url(string url, string expectedShortUrl)
@@ -192,12 +198,15 @@ namespace URLShortenerTest
 
             mockedRepository.GetOriginalByShort((Arg.Any<string>())).Returns(ret);
 
-            await Task.Delay(TimeSpan.FromSeconds(180));//3 min
+            await Task.Delay(TimeSpan.FromSeconds(180)); //3 min
 
             sut.Invoking(x => x.GetOriginalByShort(ret.ShortenedURL))
                    .Should().Throw<ResourceNotFoundException>();
 
         }
+
+
+
         public static IEnumerable<object[]> UrlAndShortUrl()
         {
             return new[]
