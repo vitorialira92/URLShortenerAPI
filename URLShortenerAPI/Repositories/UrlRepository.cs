@@ -26,6 +26,12 @@ namespace URLShortenerAPI.Repositories
             return original;
         }
 
+        public Url GetUrlByOriginal(string url)
+        {
+            var original = _context.Urls.FirstOrDefault(x => x.OriginalURL == url);
+            return original;
+        }
+
         public bool IsShortUrlAvailable(string v)
         {
             return _context.Urls.FirstOrDefault(x => x.ShortenedURL == v ) == null;

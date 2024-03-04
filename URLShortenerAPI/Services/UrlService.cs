@@ -12,6 +12,18 @@ namespace URLShortenerAPI.Services
 
         public Url ShortUrl(string url)
         {
+
+            Url savedUrl = _repository.GetUrlByOriginal(url);
+
+            if (savedUrl != null)
+            {
+                if (savedUrl.ExpiresWhen <  DateTime.Now) 
+                    _repository.Delete(savedUrl);
+                else
+                    return savedUrl;
+            }
+                
+
             string binary = GenerateShortUrl(url);
             string generatedUrl = "0" + binary;
 
