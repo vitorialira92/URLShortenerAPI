@@ -7,7 +7,7 @@ namespace URLShortenerAPI.Data
     {
         public DbSet<Url> Urls { get; set; }
 
-        public ApiContext(DbContextOptions options) : base(options)
+        public ApiContext(DbContextOptions<ApiContext> options) : base(options)
         {
 
         }
